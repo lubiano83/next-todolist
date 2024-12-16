@@ -1,3 +1,5 @@
+import Footer from "./components/footer/Footer";
+import Navbar from "./components/navbar/Navbar";
 import "./globals.css";
 
 export const metadata = {
@@ -8,8 +10,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
-      <body>
+      <body className="min-h-screen grid grid-rows-[auto_1fr_auto]">
+        <Navbar />
         {children}
+        <Footer />
       </body>
     </html>
   );
