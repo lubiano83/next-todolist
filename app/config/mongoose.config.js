@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const connectDB = async () => {
-    const URI = process.env.MONGO_URI;
+    const URI = process.env.MONGO_URL;
     const options = {
         dbName: "todos-next-proyect",
         serverSelectionTimeoutMS: 30000,
