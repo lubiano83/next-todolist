@@ -1,4 +1,4 @@
-import TodoModel from "../todo.model";
+import TodoModel from "../dao/models/todo.model.js";
 import { connectDB, isValidId } from "@/app/config/mongoose.config";
 
 export default class TodoDao {
