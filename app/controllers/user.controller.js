@@ -38,14 +38,17 @@ export default class UserController {
     registerUser = async( userData ) => {
         try {
             const user = await userDao.getUserByEmail({ email: userData.email })
-            if( user.email ) return { message: "Ese email ya esta registrado" };
-            const { first_name, last_name, email, password } = userData;
-            if(!first_name || !last_name || !email || !password) return { message: "Todos los campos son requeridos" };
-            if (password.length < 6 || password.length > 10) return { status: 400, message: "La contraseña debe tener entre 6 y 10 caracteres." };
-            const hashedPassword = await createHash(password);
-            const newUserData = { first_name, last_name, email, password: hashedPassword };
-            const payload = await userDao.createUser(newUserData);
-            return { status: 201, message: "Usuario registrado con exito", payload };
+            if( user ) {
+                return { message: "Ese email ya esta registrado" };
+            } else {
+                const { first_name, last_name, email, password } = userData;
+                if(!first_name || !last_name || !email || !password) return { message: "Todos los campos son requeridos" };
+                if (password.length < 6 || password.length > 10) return { status: 400, message: "La contraseña debe tener entre 6 y 10 caracteres." };
+                const hashedPassword = await createHash(password);
+                const newUserData = { first_name, last_name, email, password: hashedPassword };
+                const payload = await userDao.createUser(newUserData);
+                return { status: 201, message: "Usuario registrado con exito", payload };
+            }
         } catch (error) {
             return { status: 500, message: "Error al registrar un usuario", error: error.message };
         }

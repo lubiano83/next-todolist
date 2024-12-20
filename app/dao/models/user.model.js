@@ -47,6 +47,10 @@ const usersSchema = new mongoose.Schema({
         type: String,
         default: () => moment().format("DD/MM/YYYY")
     },
+    score: {
+        type: Number,
+        default: 0
+    }
 });
 
 usersSchema.pre("save", function (next) {
