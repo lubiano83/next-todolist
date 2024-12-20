@@ -1,38 +1,51 @@
 import mongoose from "mongoose";
+import moment from "moment";
 
 const collection = "users";
 
 const usersSchema = new mongoose.Schema({
     first_name: {
         type: String,
-        required: [true, 'El nombre es obligatorio'],
         trim: true,
+        required: [true, 'El nombre es obligatorio'],
     },
     last_name: {
         type: String,
-        required: [true, 'El apellido es obligatorio'],
         trim: true,
+        required: [true, 'El apellido es obligatorio'],
     },
     email: {
         type: String,
-        required: true,
         trim: true,
+        required: true,
         unique: true,
     },
     password:{
         type: String,
+        trim: true,
         required: true,
     },
+    category: {
+        type: String,
+        trim: true,
+        default: ""
+    },
+    role: {
+        type: String,
+        enum: [ "user", "admin", "developer" ],
+        default: "user"
+    },
     todos: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "todos",
+        type: Array,
+        default: []
     },
     createdAt: {
         type: String,
         default: () => moment().format("DD/MM/YYYY")
     },
     updatedAt: {
-        type: String
+        type: String,
+        default: () => moment().format("DD/MM/YYYY")
     },
 });
 

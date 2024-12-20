@@ -37,7 +37,7 @@ export default class TodoController {
         try {
             const existingTodo = await todoDao.getTodoByProperty({ title: todoData.title, category: todoData.category });
             if (existingTodo.length > 0) return { status: 400, message: "Ese título ya existe en esa categoría" };
-            const {title, category, dueDate } = todoData;
+            const { title, category, dueDate } = todoData;
             if(!category || !title || !dueDate) return { message: "Los campos category, title y dueDate son requeridos" };
             const payload = await todoDao.createTodo( todoData );
             return { status: 200, message: "Tarea creada con éxito", payload };
