@@ -1,10 +1,15 @@
 import { NextResponse } from 'next/server';
 import TodoController from '@/app/controllers/todo.controller';
+import { authenticateAndAuthorize, justSlave, justBoss, justChief } from "@/app/middlewares/auth. middleware";
 
 const todoController = new TodoController();
 
 export async function GET(request, { params }) {
     try {
+        // Autenticar y autorizar al usuario
+        const user = await authenticateAndAuthorize(request, justSlave);
+        if (user instanceof NextResponse) return user;
+        // Lógica del controlador
         const { id } = await params;
         const todo = await todoController.getTodoById( id );
         return NextResponse.json({ todo }, { status: 200 });
@@ -15,6 +20,10 @@ export async function GET(request, { params }) {
 
 export async function PATCH(request, { params }) {
     try {
+        // Autenticar y autorizar al usuario
+        const user = await authenticateAndAuthorize(request, justBoss);
+        if (user instanceof NextResponse) return user;
+        // Lógica del controlador
         const { id } = await params;
         const todoData = await request.json();
         const todo = await todoController.updateTodoById( id, todoData );
@@ -26,6 +35,10 @@ export async function PATCH(request, { params }) {
 
 export async function DELETE(request, { params }) {
     try {
+        // Autenticar y autorizar al usuario
+        const user = await authenticateAndAuthorize(request, justChief);
+        if (user instanceof NextResponse) return user;
+        // Lógica del controlador
         const { id } = await params;
         const todo = await todoController.deleteTodoById( id );
         return NextResponse.json({ todo }, { status: 200 });

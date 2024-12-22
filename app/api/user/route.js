@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import UserController from "@/app/controllers/user.controller";
-import { authenticateAndAuthorize, soloUser, soloAdmin, soloDev } from "@/app/middlewares/auth. middleware";
+import { authenticateAndAuthorize, justSlave, justBoss, justChief } from "@/app/middlewares/auth. middleware";
 
 const userController = new UserController();
 
 export async function GET(request) {
   try {
     // Autenticar y autorizar al usuario
-    const user = await authenticateAndAuthorize(request, soloUser);
+    const user = await authenticateAndAuthorize(request, justSlave);
     if (user instanceof NextResponse) return user;
     // Lógica del controlador
     const users = await userController.getUsers({});
@@ -19,10 +19,6 @@ export async function GET(request) {
 
 export async function POST(request) {
   try {
-    // Autenticar y autorizar al usuario
-    const user = await authenticateAndAuthorize(request, soloUser);
-    if (user instanceof NextResponse) return user;
-    // Lógica del controlador
     const userData = await request.json();
     const userCreated = await userController.registerUser(userData);
     return NextResponse.json({ user: userCreated }, { status: 200 });

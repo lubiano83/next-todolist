@@ -33,29 +33,20 @@ export const authenticateAndAuthorize = async (request, roleMiddleware) => {
 };
 
 // Roles específicos
-export const soloDev = (user) => {
-  if (user.role !== "developer") {
-    return NextResponse.json(
-      { message: "Acceso denegado. Solo para desarrolladores." },
-      { status: 403 }
-    );
+export const justChief = (user) => {
+  if (user.role === "chief") {
+    return NextResponse.json({ message: "Acceso denegado. Solo para el lider." }, { status: 403 });
   }
 };
 
-export const soloAdmin = (user) => {
-  if (user.role !== "admin" && user.role !== "developer") {
-    return NextResponse.json(
-      { message: "Acceso denegado. Solo para administradores." },
-      { status: 403 }
-    );
+export const justBoss = (user) => {
+  if (user.role === "boss" && user.role === "chief") {
+    return NextResponse.json({ message: "Acceso denegado. Solo para encargados." }, { status: 403 });
   }
 };
 
-export const soloUser = (user) => {
-  if (user.role !== "user" && user.role !== "developer") {
-    return NextResponse.json(
-      { message: "Acceso denegado. Solo para usuarios." },
-      { status: 403 }
-    );
+export const justSlave = (user) => {
+  if (user.role === "slave" && user.role === "boss" && user.role === "chief") {
+    return NextResponse.json({ message: "Acceso denegado. Solo para subordinados." }, { status: 403 });
   }
 };

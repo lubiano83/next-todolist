@@ -32,8 +32,8 @@ const usersSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: [ "user", "admin", "developer" ],
-        default: "user"
+        enum: [ "slave", "boss", "chief" ],
+        default: "slave"
     },
     todos: {
         type: Array,
@@ -61,11 +61,6 @@ usersSchema.pre("save", function (next) {
 
 // Hook pre-update para formatear `updatedAt` antes de una actualización
 usersSchema.pre("findOneAndUpdate", function (next) {
-    this._update.updatedAt = moment().format("DD/MM/YYYY");
-    next();
-});
-
-usersSchema.pre("updateOne", function (next) {
     this._update.updatedAt = moment().format("DD/MM/YYYY");
     next();
 });

@@ -1,11 +1,16 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import UserController from "@/app/controllers/user.controller";
+import { authenticateAndAuthorize, justSlave, justBoss, justChief } from "@/app/middlewares/auth. middleware";
 
 const userController = new UserController();
 
 export async function POST(request) {
     try {
+        // Autenticar y autorizar al usuario
+        const user = await authenticateAndAuthorize(request, justSlave);
+        if (user instanceof NextResponse) return user;
+        // Lógica del controlador
         const cookieStore = await cookies();
         const token = cookieStore.get("coderCookieToken")?.value;
         if ( !token ) return NextResponse.json({ message: "Token no encontrado, sesión cerrada" }, { status: 401 });
