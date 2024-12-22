@@ -1,6 +1,7 @@
 import UserDao from "../dao/user.dao";
 import { createHash, isValidPassword } from "../utils/bcrypt";
 import jwt from "jsonwebtoken";
+import moment from "moment";
 
 const userDao = new UserDao();
 
@@ -84,12 +85,13 @@ export default class UserController {
         }
     };
     
-    updateUser = async( id, userData ) => {
+    updateUserById = async( id, userData ) => {
         try {
             const user = await userDao.getUserById( id );
             if( !user ) return { status: 404, message: "Ese usuario no existe" };
             const { first_name, last_name } = userData;
-            const payload = await userDao.updateUserById( id, { first_name, last_name });
+            const updatedData = { first_name, last_name, updatedAt: moment().format("DD/MM/YYYY")};
+            const payload = await userDao.updateUserById( id, updatedData);
             return { status: 200, payload }
         } catch (error) {
             return { status: 500, message: "Error al modificar el usuario", error: error.message };

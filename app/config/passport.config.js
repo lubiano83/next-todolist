@@ -1,29 +1,31 @@
 import passport from "passport";
-import jwt from "passport-jwt";
-
-const JWTStrategy = jwt.Strategy;
-const ExtractJwt = jwt.ExtractJwt;
-
-const initializePassport = () => {
-    passport.use("current", new JWTStrategy({
-        jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
-        secretOrKey: process.env.COOKIE_KEY,
-        //Misma palabra secreta que tenemos en App.js
-    }, async (jwt_payload, done) => {
-        try {
-            return done(null, jwt_payload);
-        } catch (error) {
-            return done(error);
-        }
-    }));
-};
+import { Strategy as JWTStrategy, ExtractJwt } from "passport-jwt";
 
 const cookieExtractor = (req) => {
-    let token = null;
-    if(req && req.cookies) {
-        token = req.cookies["coderCookieToken"];
-    }
-    return token;
+  let token = null;
+  if (req?.cookies) {
+    token = req.cookies["coderCookieToken"]; // Nombre de la cookie
+  }
+  return token;
+};
+
+const initializePassport = () => {
+  passport.use(
+    "current",
+    new JWTStrategy(
+      {
+        jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+        secretOrKey: process.env.COOKIE_KEY, // Clave secreta definida en .env.local
+      },
+      async (jwt_payload, done) => {
+        try {
+          return done(null, jwt_payload);
+        } catch (error) {
+          return done(error);
+        }
+      }
+    )
+  );
 };
 
 export default initializePassport;

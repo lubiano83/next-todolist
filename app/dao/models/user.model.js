@@ -53,10 +53,20 @@ const usersSchema = new mongoose.Schema({
     }
 });
 
+// Hook pre-save para formatear `updatedAt` antes de guardar
 usersSchema.pre("save", function (next) {
-    if (this.updatedAt) {
-        this.updatedAt = moment(this.updatedAt, "DD/MM/YYYY").format("DD/MM/YYYY");
-    }
+    this.updatedAt = moment().format("DD/MM/YYYY");
+    next();
+});
+
+// Hook pre-update para formatear `updatedAt` antes de una actualización
+usersSchema.pre("findOneAndUpdate", function (next) {
+    this._update.updatedAt = moment().format("DD/MM/YYYY");
+    next();
+});
+
+usersSchema.pre("updateOne", function (next) {
+    this._update.updatedAt = moment().format("DD/MM/YYYY");
     next();
 });
 

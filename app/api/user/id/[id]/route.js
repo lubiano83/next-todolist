@@ -17,7 +17,7 @@ export async function PATCH(request, { params }) {
     try {
         const { id } = await params;
         const userData = await request.json();
-        const user = await userController.updateUser( id, userData );
+        const user = await userController.updateUserById( id, userData );
         return NextResponse.json({ user }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ message: "Error al obtener los todos", error: error.message }, { status: 500 });

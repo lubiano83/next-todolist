@@ -50,7 +50,8 @@ export default class TodoController {
         try {
             const todo = await todoDao.getTodoById( id );
             if(!todo) return { status: 404, message: "Esa tarea no existe" };
-            const payload = await todoDao.updateTodoById( id, todoData );
+            const { title, category, description, priority, completed, dueDate } = todoData;
+            const payload = await todoDao.updateTodoById( id, { title, category, description, priority, completed, dueDate } );
             return { status: 200, message: "Tarea modificada con exito", payload };
         } catch (error) {
             return { status: 500, message: "Error al modificar la tarea", error: error.message };
