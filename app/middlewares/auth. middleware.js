@@ -18,10 +18,7 @@ export const authenticateAndAuthorize = async (request, roleMiddleware) => {
   const user = getUserFromRequest(request);
 
   if (!user) {
-    return NextResponse.json(
-      { message: "No autenticado." },
-      { status: 401 }
-    );
+    return NextResponse.json({ message: "No autenticado." }, { status: 401 });
   }
 
   const isAuthorized = roleMiddleware(user);
@@ -34,19 +31,19 @@ export const authenticateAndAuthorize = async (request, roleMiddleware) => {
 
 // Roles específicos
 export const justChief = (user) => {
-  if (user.role === "chief") {
+  if (user.role !== "chief") {
     return NextResponse.json({ message: "Acceso denegado. Solo para el lider." }, { status: 403 });
   }
 };
 
 export const justBoss = (user) => {
-  if (user.role === "boss" && user.role === "chief") {
+  if (user.role !== "boss" && user.role !== "chief") {
     return NextResponse.json({ message: "Acceso denegado. Solo para encargados." }, { status: 403 });
   }
 };
 
 export const justSlave = (user) => {
-  if (user.role === "slave" && user.role === "boss" && user.role === "chief") {
+  if (user.role !== "slave" && user.role !== "boss" && user.role !== "chief") {
     return NextResponse.json({ message: "Acceso denegado. Solo para subordinados." }, { status: 403 });
   }
 };

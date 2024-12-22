@@ -1,10 +1,9 @@
-import React from 'react';
 import TodoCard from './TodoCard';
 
 const TodoList = async () => {
-  const response = await fetch("http://localhost:3000/api/todo", { cache: "no-store" });
+  const response = await fetch(`http://localhost:3000/api/todo`, { cache: "no-store", credentials: "include" });
   const data = await response.json();
-  const dataTodos = data.todos.payload;
+  const dataTodos = data?.todos?.payload || [];
   const todosArray = Array.isArray(dataTodos) ? dataTodos : [dataTodos];
 
   return (
@@ -14,7 +13,7 @@ const TodoList = async () => {
           <tr>
             <th className="p-2 text-center border border-gray-300">ID</th>
             <th className="p-2 text-center border border-gray-300">Title</th>
-            <th className="p-2 text-center border border-gray-300">Category</th>
+            <th className="p-2 text-center border border-gray-300">Category</th>|
             <th className="p-2 text-center border border-gray-300">Description</th>
             <th className="p-2 text-center border border-gray-300">Priority</th>
             <th className="p-2 text-center border border-gray-300">Completed</th>
@@ -23,9 +22,11 @@ const TodoList = async () => {
           </tr>
         </thead>
         <tbody>
-          {todosArray.map((task) => (
-            <TodoCard key={task._id} task={task} />
-          ))}
+          {
+            todosArray.map((task) => (
+              <TodoCard key={task._id} task={task} />
+            ))
+          }
         </tbody>
       </table>
     </div>
