@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const connectDB = async () => {
     const URI = process.env.MONGO_URL;
     const options = {
-        dbName: "todos-next-proyect",
+        dbName: process.env.DB_NAME,
         serverSelectionTimeoutMS: 30000,
     };
 

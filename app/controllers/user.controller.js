@@ -74,12 +74,11 @@ export default class UserController {
         try {
             if (!token) return { status: 401, message: "Token no encontrado, sesión cerrada" };
             try {
-                const decoded = jwt.verify(token, process.env.COOKIE_KEY);
-                console.log("Token decodificado:", decoded);
+                jwt.verify(token, process.env.COOKIE_KEY);
             } catch (error) {
                 return { status: 401, message: "Token inválido o expirado" };
             }
-            return { status: 200, message: "Sesión cerrada con éxito", cookie: { name: "coderCookieToken", value: "", options: { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "strict", maxAge: -1, path: "/" }}};
+            return { status: 200, message: "Sesión cerrada con éxito", cookie: { name: process.env.COOKIE_NAME, value: "", options: { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "strict", maxAge: -1, path: "/" }}};
         } catch (error) {
             return { status: 500, message: "Error al cerrar sesión", error: error.message };
         }
