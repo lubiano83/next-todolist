@@ -2,6 +2,9 @@
 import React from 'react';
 
 const TodoCard = ({ task }) => {
+
+  console.log("task:", task)
+
   return (
     <tr className="border border-gray-300 bg-white hover:bg-gray-100">
       <td className="p-2 text-center border border-gray-300">{task._id || ""}</td>

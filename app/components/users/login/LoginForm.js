@@ -14,7 +14,7 @@ const LoginForm = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`/api/users/login`, {
+      const response = await fetch(`http://localhost:3000/api/users/login`, {
         method: "POST", // Cambiado a POST
         credentials: "include", // Incluye las cookies
         cache: "no-store", // No almacena en caché
@@ -28,7 +28,7 @@ const LoginForm = () => {
       });
 
       const data = await response.json();
-      console.log("data", data);
+      router.push("/")
       router.refresh();
     } catch (err) {
       setError(err.message);
@@ -36,7 +36,8 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center gap-3">
+    <div className="flex flex-col justify-center items-center">
+      <div className="bg-black bg-opacity-25 min-w-72 p-8 rounded-3xl flex flex-col justify-center items-center gap-3">
       <Title>Login:</Title>
       <form onSubmit={handleLogin} className="flex flex-col justify-center items-center gap-4">
         <div className="flex flex-col gap-2">
@@ -46,6 +47,7 @@ const LoginForm = () => {
         {error && <p style={{ color: "red" }}>{error}</p>}
         <button type="submit" className="border-2 border-white py-1 px-4 rounded-xl bg-black text-white">Login</button>
       </form>
+      </div>
     </div>
   );
 };

@@ -1,6 +1,5 @@
 import Footer from "./components/footer/Footer";
 import Navbar from "./components/navbar/Navbar";
-import LoginForm from "./components/users/login/LoginForm";
 import { cookies } from 'next/headers';
 import "./globals.css";
 
@@ -17,10 +16,8 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="es">
       <body className="min-h-screen grid grid-rows-[auto_1fr_auto]">
-        <Navbar />
-        { cookie ? children : 
-        <LoginForm/> 
-        }
+        <Navbar cookie={cookie}/>
+        { children }
         <Footer />
       </body>
     </html>

@@ -4,8 +4,8 @@ const TodoList = async ({ category = "Compras" }) => {
   
   const response = await fetch(`http://localhost:3000/api/todos/category/${category}`, { cache: "no-store" });
   const data = await response.json();
-  console.log("data:", data);
   const todosArray = Array.isArray(data.todos?.payload) ? data.todos.payload : [];
+  console.log("TodoList:", data);
 
   return (
     <div className="overflow-x-auto">
