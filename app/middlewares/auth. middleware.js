@@ -3,16 +3,14 @@ import jwt from "jsonwebtoken";
 import { cookies } from 'next/headers';
 
 export const getUserFromRequest = async () => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(process.env.COOKIE_NAME)?.value;
-  console.log("Cookies disponibles:", cookieStore.getAll()); // Muestra todas las cookies disponibles
-
-  if (!token) {
-    console.error("Token no encontrado en las cookies.");
-    return null;
-  }
-
   try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get(process.env.COOKIE_NAME)?.value;
+    console.log("Cookies disponibles:", cookieStore.getAll()); // Muestra todas las cookies disponibles
+    if (!token) {
+      console.error("Token no encontrado en las cookies.");
+      return null;
+    }
     const decoded = jwt.verify(token, process.env.COOKIE_KEY);
     console.log("Token decodificado:", decoded);
     return decoded;
@@ -24,22 +22,27 @@ export const getUserFromRequest = async () => {
 
 
 export const authenticateAndAuthorize = async (request, roleMiddleware) => {
-  const user = await getUserFromRequest(); // Elimina el argumento `request`
-  console.log("este es el token:", user);
-
-  if (!user) {
-    console.error("No autenticado: Token inválido o no presente.");
-    return NextResponse.json({ message: "No autenticado." }, { status: 401 });
+  try {
+    const user = await getUserFromRequest(); // Elimina el argumento `request`
+    console.log("este es el token:", user);
+  
+    if (!user) {
+      console.error("No autenticado: Token inválido o no presente.");
+      return NextResponse.json({ message: "No autenticado." }, { status: 401 });
+    }
+  
+    console.log("Usuario autenticado:", user);
+  
+    const isAuthorized = roleMiddleware(user);
+    if (isAuthorized instanceof NextResponse) {
+      return isAuthorized; // Retorna el error de autorización
+    }
+  
+    return user; // Devuelve el usuario si está autenticado y autorizado
+  } catch (error) {
+    console.error("Error al verificar el user:", error);
+    return null;
   }
-
-  console.log("Usuario autenticado:", user);
-
-  const isAuthorized = roleMiddleware(user);
-  if (isAuthorized instanceof NextResponse) {
-    return isAuthorized; // Retorna el error de autorización
-  }
-
-  return user; // Devuelve el usuario si está autenticado y autorizado
 };
 
 export const justChief = (user) => {
