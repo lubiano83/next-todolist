@@ -16,6 +16,7 @@ export const getUserFromRequest = (request) => {
 
 export const authenticateAndAuthorize = async (request, roleMiddleware) => {
   const user = getUserFromRequest(request);
+  console.log("user:", user)
 
   if (!user) {
     return NextResponse.json({ message: "No autenticado." }, { status: 401 });

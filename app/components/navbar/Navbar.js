@@ -1,10 +1,12 @@
 import React from 'react';
-import Title from '../Title';
+import Menu from './Menu';
+import Logo from '../Logo';
 
 const Navbar = () => {
   return (
-    <div className='flex justify-center items-center'>
-      <Title> Administrador de Tareas </Title>
+    <div className='flex justify-evenly items-center bg-black py-2'>
+      <Logo />
+      <Menu />
     </div>
   )
 }
