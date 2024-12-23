@@ -1,11 +1,17 @@
 import TodoCard from './TodoCard';
 
-const TodoList = async ({ category = "Compras" }) => {
+const TodoList = async({ category = "Regalos" }) => {
   
-  const response = await fetch(`http://localhost:3000/api/todos/category/${category}`, { cache: "no-store" });
+  const response = await fetch(`http://localhost:3000/api/todos/category/${category}`, {
+    cache: "no-store",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
   const data = await response.json();
-  const todosArray = Array.isArray(data.todos?.payload) ? data.todos.payload : [];
-  console.log("TodoList:", data);
+  console.log(data)
+  const todosArray = Array.isArray(data.todo?.payload) ? data.todo?.payload : [];
 
   return (
     <div className="overflow-x-auto">

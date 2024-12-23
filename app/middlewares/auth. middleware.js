@@ -1,50 +1,64 @@
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
+import { cookies } from 'next/headers';
 
-export const getUserFromRequest = (request) => {
-  const cookieHeader = request.headers.get("cookie");
-  const token = cookieHeader?.split("=")[1];
+export const getUserFromRequest = async () => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(process.env.COOKIE_NAME)?.value;
+  console.log("Cookies disponibles:", cookieStore.getAll()); // Muestra todas las cookies disponibles
 
-  if (!token) return null;
+  if (!token) {
+    console.error("Token no encontrado en las cookies.");
+    return null;
+  }
 
   try {
-    return jwt.verify(token, process.env.COOKIE_KEY);
+    const decoded = jwt.verify(token, process.env.COOKIE_KEY);
+    console.log("Token decodificado:", decoded);
+    return decoded;
   } catch (error) {
+    console.error("Error al verificar el token:", error);
     return null;
   }
 };
 
+
 export const authenticateAndAuthorize = async (request, roleMiddleware) => {
-  const user = getUserFromRequest(request);
-  console.log("user:", user)
+  const user = await getUserFromRequest(); // Elimina el argumento `request`
+  console.log("este es el token:", user);
 
   if (!user) {
+    console.error("No autenticado: Token inválido o no presente.");
     return NextResponse.json({ message: "No autenticado." }, { status: 401 });
   }
 
+  console.log("Usuario autenticado:", user);
+
   const isAuthorized = roleMiddleware(user);
   if (isAuthorized instanceof NextResponse) {
-    return isAuthorized;
+    return isAuthorized; // Retorna el error de autorización
   }
 
-  return user; // Devuelve el usuario si está autorizado
+  return user; // Devuelve el usuario si está autenticado y autorizado
 };
 
-// Roles específicos
 export const justChief = (user) => {
   if (user.role !== "chief") {
-    return NextResponse.json({ message: "Acceso denegado. Solo para el lider." }, { status: 403 });
+    console.error(`Acceso denegado: Usuario con rol "${user.role}" intentó acceder a un recurso de "chief".`);
+    return NextResponse.json({ message: "Acceso denegado. Solo para el líder." }, { status: 403 });
   }
 };
 
 export const justBoss = (user) => {
-  if (user.role !== "boss" && user.role !== "chief") {
+  if (user.role !== "boss" && user.role !== "chief") { // Permite solo "boss" y "chief"
+    console.error(`Acceso denegado: Usuario con rol "${user.role}" intentó acceder a un recurso de "boss".`);
     return NextResponse.json({ message: "Acceso denegado. Solo para encargados." }, { status: 403 });
   }
 };
 
 export const justSlave = (user) => {
-  if (user.role !== "slave" && user.role !== "boss" && user.role !== "chief") {
+  if (user.role !== "slave" && user.role !== "boss" && user.role !== "chief") { // Permite "slave", "boss" y "chief"
+    console.error(`Acceso denegado: Usuario con rol "${user.role}" intentó acceder a un recurso de "slave".`);
     return NextResponse.json({ message: "Acceso denegado. Solo para subordinados." }, { status: 403 });
   }
 };

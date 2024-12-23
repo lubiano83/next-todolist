@@ -78,7 +78,21 @@ export default class UserController {
             } catch (error) {
                 return { status: 401, message: "Token inválido o expirado" };
             }
-            return { status: 200, message: "Sesión cerrada con éxito", cookie: { name: process.env.COOKIE_NAME, value: "", options: { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "strict", maxAge: -1, path: "/" }}};
+            return { 
+                status: 200, 
+                message: "Sesión cerrada con éxito", 
+                cookie: { 
+                    name: process.env.COOKIE_NAME, 
+                    value: "", 
+                    options: { 
+                        httpOnly: true, 
+                        secure: process.env.NODE_ENV === "production", 
+                        sameSite: "strict", 
+                        maxAge: -1, // Expira la cookie
+                        path: "/" 
+                    } 
+                }
+            };
         } catch (error) {
             return { status: 500, message: "Error al cerrar sesión", error: error.message };
         }

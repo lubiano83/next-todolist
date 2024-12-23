@@ -31,7 +31,7 @@ const LogoutButton = () => {
 
   return (
     <div onClick={handleLogout} className='text-white flex justify-center items-center h-full hover:text-gray-500'>
-        Salir
+     Salir
     </div>
   );
 };
